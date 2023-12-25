@@ -263,10 +263,14 @@ img {
   font-family: poets electra,Georgia,times new roman,serif;
 
 }
-
 /* Footer */
 .footer {
-  margin: 4rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(250, 245, 238); /* Adjust the background color as needed */
+  padding: 1rem; /* Adjust the padding as needed */
   text-align: center;
 }
 
@@ -340,7 +344,13 @@ img {
   top: 0;
   right: 0;
   color: var(--gray-light);
-  padding: 15px;
+ 
+  background-color: #000000;
+  padding: 8px;
+  border-radius: 2px;
+}
+#searchClose:hover {
+  cursor: pointer;
 }
 
 
@@ -350,6 +360,7 @@ img {
   text-decoration: none;
   margin-top: 40px;
   display: inline-block;
+  margin-bottom: 55px;
 }
 
 .pagination:hover {
