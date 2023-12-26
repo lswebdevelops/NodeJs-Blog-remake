@@ -110,17 +110,21 @@ img {
   grid-area: logo;
 }
 
-.header__logo:hover {
-  text-decoration: underline;
-}
+
 
 .header__nav {
   justify-content: center;
   display: flex;
   grid-area: menu;
 }
+.header__logo__admin , .header__logo_nodejs {
+  font-weight: 800;
+  font-size: 25px;
+  text-decoration: none;
+  grid-area: logo;
+}
 
-.header__logo, .header__nav, .header__button {
+.header__logo, .header__nav, .header__button ,.header__logo__admin , .header__logo_nodejs  {
   width: 100%;
 }
 
@@ -159,7 +163,7 @@ img {
 
 .header__nav ul a {
   padding: 10px;
-  text-decoration: none;
+
 }
 
 .header__nav ul a.active {
@@ -167,7 +171,7 @@ img {
 }
 
 .header__nav ul a:hover {
-  text-decoration: underline;
+  text-decoration: node;
 }
 
 /* Author - HomePage */
@@ -378,6 +382,22 @@ img {
 .x-close-icon:hover {
   scale: 1.02;
   cursor: pointer;
+ 
+}
+.btn-logout {
+  background-color: rgb(250, 245, 238); 
+  border: none;
+  padding: 0;
+  margin: 0;
 
-  
+}
+.btn-img-logout{
+  background-color: white;
+  border-radius: 20%;
+height: 30px;
+}
+.btn-img-logout:hover{
+   scale: 1.1;
+   cursor: pointer;
+   border: grey solid 1px;
 }
