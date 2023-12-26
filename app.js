@@ -12,6 +12,10 @@ const PORT = 4000 || process.env.PORT;
 //connect to db
 connectDB();
 
+// search: 
+app.use(express.urlencoded({ extended: true}))
+app.use(express.json())
+
 // public folder
 
 app.use(express.static("public"));

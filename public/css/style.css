@@ -367,3 +367,17 @@ img {
 .pagination:hover {
   color: var(--black);
 }
+
+.x-close-icon {
+  background-color: white;
+   width: 2rem;
+   border-radius: 50%;
+  
+}
+
+.x-close-icon:hover {
+  scale: 1.02;
+  cursor: pointer;
+
+  
+}

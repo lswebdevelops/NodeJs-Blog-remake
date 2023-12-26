@@ -1,53 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const Post = require('../models/Post')
-
+const Post = require("../models/Post");
 
 /*
  * Get/
  * HOME
- *  
+ *
  */
-// with pagination: 
+// with pagination:
 
 router.get("/", async (req, res) => {
   try {
     const locals = {
       title: "NodeJs Blog Remake",
-      description: "Simple Blog created with NodeJs, Express &amp; MongoDb."
-  }
-  let perPage = 5;
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb.",
+    };
+    let perPage = 6;
 
-  let page = req.query.page || 1;
+    let page = req.query.page || 1;
 
-  const data = await Post.aggregate([ { $sort: {createdAt: -1 }}])
-  .skip(perPage * page - perPage) 
-  .limit(perPage)
-  .exec()
+    const data = await Post.aggregate([{ $sort: { createdAt: -1 } }])
+      .skip(perPage * page - perPage)
+      .limit(perPage)
+      .exec();
 
-     // Count is deprecated - please use countDocuments
+    // Count is deprecated - please use countDocuments
     // const count = await Post.count();
     const count = await Post.countDocuments({});
-  const nextPage = parseInt(page) + 1;
-  const hasNextPage = nextPage <= Math.ceil( count/ perPage);
+    const nextPage = parseInt(page) + 1;
+    const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
- 
-  res.render("index", {
-    locals, 
-    data, 
-    current: page,
-    nextPage: hasNextPage ? nextPage : null
-  } )
-
+    res.render("index", {
+      locals,
+      data,
+      current: page,
+      nextPage: hasNextPage ? nextPage : null,
+    });
   } catch (error) {
     console.log(error);
   }
-
 });
 
-
 // no pagination
-
 
 // router.get("/", async (req, res) => {
 //     const locals = {
@@ -65,63 +59,106 @@ router.get("/", async (req, res) => {
 
 // });
 
+/*
+ * Get/
+ * post
+ *
+ */
 
+router.get("/post/:id", async (req, res) => {
+  try {
+    let slug = req.params.id;
+    const data = await Post.findById({ _id: slug });
 
+    const locals = {
+      title: data.title,
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb.",
+    };
 
+    res.render("post", { locals, data });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
+/*
+ * post/
+ * post searchTerm
+ *
+ */
 
+router.post("/search", async (req, res) => {
+  try {
+    const locals = {
+      title: "Search",
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb.",
+    };
 
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
 
-
-
+    const data = await Post.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+      ],
+    });
+    res.render("search", {
+      locals,
+      data,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 // function insertPostData () {
 //   Post.insertMany([
 //     {
-//       title: "Building APIs with Node.js",
-//       body: "Learn how to use Node.js to build RESTful APIs using frameworks like Express.js"
+//       title: "The Future of Artificial Intelligence",
+//       body: "Exploring the potential impact and ethical considerations of advanced AI technologies."
 //     },
 //     {
-//       title: "Deployment of Node.js applications",
-//       body: "Understand the different ways to deploy your Node.js applications, including on-premises, cloud, and container environments..."
+//       title: "Deep Learning Demystified",
+//       body: "Understanding the principles behind deep learning and neural networks in AI."
 //     },
 //     {
-//       title: "Authentication and Authorization in Node.js",
-//       body: "Learn how to add authentication and authorization to your Node.js web applications using Passport.js or other authentication libraries."
+//       title: "Web Development Trends in 2023",
+//       body: "A comprehensive look at the latest trends shaping the landscape of web development this year."
 //     },
 //     {
-//       title: "Understand how to work with MongoDB and Mongoose",
-//       body: "Understand how to work with MongoDB and Mongoose, an Object Data Modeling (ODM) library, in Node.js applications."
+//       title: "The Rise of Decentralized Finance (DeFi)",
+//       body: "Exploring the decentralized finance movement and its implications for traditional financial systems."
 //     },
 //     {
-//       title: "build real-time, event-driven applications in Node.js",
-//       body: "Socket.io: Learn how to use Socket.io to build real-time, event-driven applications in Node.js."
+//       title: "Space Exploration in the 21st Century",
+//       body: "A glimpse into the ambitious plans and technological advancements driving space exploration today."
 //     },
 //     {
-//       title: "Discover how to use Express.js",
-//       body: "Discover how to use Express.js, a popular Node.js web framework, to build web applications."
+//       title: "Sustainable Technology Innovations",
+//       body: "Highlighting eco-friendly technologies that are making a positive impact on the environment."
 //     },
 //     {
-//       title: "Asynchronous Programming with Node.js",
-//       body: "Asynchronous Programming with Node.js: Explore the asynchronous nature of Node.js and how it allows for non-blocking I/O operations."
+//       title: "Cybersecurity Best Practices for Businesses",
+//       body: "Guidance on implementing effective cybersecurity measures to protect businesses from digital threats."
 //     },
 //     {
-//       title: "Learn the basics of Node.js and its architecture",
-//       body: "Learn the basics of Node.js and its architecture, how it works, and why it is popular among developers."
+//       title: "The Art of Storytelling in Marketing",
+//       body: "Examining how storytelling can be a powerful tool in crafting compelling marketing messages."
 //     },
 //     {
-//       title: "NodeJs Limiting Network Traffic",
-//       body: "Learn how to limit netowrk traffic."
+//       title: "Advancements in Quantum Computing",
+//       body: "An overview of recent breakthroughs in quantum computing and their potential applications."
 //     },
 //     {
-//       title: "Learn Morgan - HTTP Request logger for NodeJs",
-//       body: "Learn Morgan."
-//     },
-//   ])
+//       title: "Culinary Adventures: Exploring Global Flavors",
+//       body: "A journey through diverse cuisines and the unique flavors that define different cultures."
+//     }
+//   ]);
+
 // }
 
 // insertPostData();
-
 
 router.get("/about", (req, res) => {
   res.render("about");
@@ -129,8 +166,5 @@ router.get("/about", (req, res) => {
 router.get("/contact", (req, res) => {
   res.render("contact");
 });
-
-
-
 
 module.exports = router;
