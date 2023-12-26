@@ -8,22 +8,71 @@ const Post = require('../models/Post')
  * HOME
  *  
  */
+// with pagination: 
 
 router.get("/", async (req, res) => {
+  try {
     const locals = {
-        title: "NodeJs Blog Remake",
-        description: "Simple Blog created with NodeJs, Express &amp; MongoDb."
-    }
+      title: "NodeJs Blog Remake",
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb."
+  }
+  let perPage = 5;
 
-    try {
-      const data = await Post.find();
-      res.render("index", { locals, data });
+  let page = req.query.page || 1;
 
-    } catch (error) {
-      console.log(error);
-    }
+  const data = await Post.aggregate([ { $sort: {createdAt: -1 }}])
+  .skip(perPage * page - perPage) 
+  .limit(perPage)
+  .exec()
+
+     // Count is deprecated - please use countDocuments
+    // const count = await Post.count();
+    const count = await Post.countDocuments({});
+  const nextPage = parseInt(page) + 1;
+  const hasNextPage = nextPage <= Math.ceil( count/ perPage);
+
+ 
+  res.render("index", {
+    locals, 
+    data, 
+    current: page,
+    nextPage: hasNextPage ? nextPage : null
+  } )
+
+  } catch (error) {
+    console.log(error);
+  }
 
 });
+
+
+// no pagination
+
+
+// router.get("/", async (req, res) => {
+//     const locals = {
+//         title: "NodeJs Blog Remake",
+//         description: "Simple Blog created with NodeJs, Express &amp; MongoDb."
+//     }
+
+//     try {
+//       const data = await Post.find();
+//       res.render("index", { locals, data });
+
+//     } catch (error) {
+//       console.log(error);
+//     }
+
+// });
+
+
+
+
+
+
+
+
+
 
 
 // function insertPostData () {
@@ -72,11 +121,6 @@ router.get("/", async (req, res) => {
 // }
 
 // insertPostData();
-
-
-
-
-
 
 
 router.get("/about", (req, res) => {
