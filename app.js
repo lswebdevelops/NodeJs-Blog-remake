@@ -31,8 +31,10 @@ app.use(session({
     mongoUrl: process.env.MONGODB_URI
   }),
 
-  // cookie expiration date  =>> // Date.now() - 30 * 24 * 60 * 60 *1000
-  cookie: { maxAge: new Date (Date.now() + (3600000))}
+  // cookie expiration date 
+  cookie: { 
+    maxAge: 360000
+  }
 
 }))
 // public folder
