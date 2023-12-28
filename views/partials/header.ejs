@@ -3,16 +3,17 @@
     <nav class="header__nav">
         <ul>
             <li>
-                <a href="/" class="">Home</a>
+                <a href="/" class="<%= isActiveRoute('/', currentRoute) %>">Home</a>
             </li>
             <li>
-                <a href="/about" class="">About</a>
+                <a href="/about" class="<%= isActiveRoute('/about', currentRoute) %>">About</a>
             </li>
             <li>
-                <a href="/contact" class="">Contact</a>
+                <a href="/contact"  class="<%= isActiveRoute('/contact', currentRoute) %>" >Contact</a>
             </li>
             <li>
-                <a href="/admin" class="">Admin</a>
+                <a href="/admin">Admin</a>
+
             </li>
         </ul>
     </nav>

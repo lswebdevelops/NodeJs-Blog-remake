@@ -6,7 +6,7 @@ const methodOverride = require('method-override')
 const session = require('express-session');
 
 const connectDB = require("./server/config/db");
-
+const isActiveRoute = require('./server/helpers/routeHelpers')
 const app = express();
 
 const cookieParser = require("cookie-parser"); 
@@ -45,8 +45,9 @@ app.use(express.static("public"));
 // Templating engine
 app.use(expressLayout);
 app.set("layout", "layouts/main");
-
 app.set("view engine", "ejs");
+
+app.locals.isActiveRoute = isActiveRoute;
 
 app.use("/", require("./server/routes/main"));
 app.use("/", require("./server/routes/admin"));
