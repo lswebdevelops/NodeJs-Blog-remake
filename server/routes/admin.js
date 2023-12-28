@@ -76,56 +76,68 @@ router.post("/admin", async (req, res) => {
   }
 });
 
-/*
- * get/
- * admin  dashboard -
- *
+/**
+ * POST
+ * Admin - Dashboard
  */
 
 router.get("/dashboard", authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: "Dashboard",
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb.",
+    };
 
-    try {
-    
-        const data = await Post.find();
-        res.render('admin/dashboard', {
-            locals, 
-            data
-        })
-    } catch (error) {
-        
-    }
+    const data = await Post.find();
+    res.render("admin/dashboard", {
+      locals,
+      data,
+      layout: adminLayout,
+    });
+  } catch (error) {}
+});
+/*
+ * get/
+ * admin  create new post -
+ *
+ */
 
+router.get("/add-post", authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: "New Post",
+      description: "Simple Blog created with NodeJs, Express &amp; MongoDb.",
+    };
 
-
-
-
-
-  res.render("admin/dashboard");
+    const data = await Post.find();
+    res.render("admin/add-post", {
+      locals,
+      layout: adminLayout,
+    });
+  } catch (error) {}
 });
 
+/*
+ * post/
+ * admin  create new post -
+ *
+ */
+router.post("/add-post", authMiddleware, async (req, res) => {
+  try {
+    try {
+      const newPost = new Post({
+        title: req.body.title,
+        body: req.body.body,
+      });
 
-
-
-
-
-
-
-// router.post("/admin", async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-//     // console.log(req.body);
-
-//     if (req.body.username === "admin" && req.body.password === "password") {
-//       res.send("you are loging in");
-//     }else{
-//         res.send('false!! ');
-//     }
-
-//     //   res.render("admin/login", { locals , layout: adminLayout });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+      await Post.create(newPost);
+      res.redirect("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  } catch (error) {}
+  console.log(error);
+});
 
 /*
  * post/
