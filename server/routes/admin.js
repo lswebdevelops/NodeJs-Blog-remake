@@ -94,7 +94,9 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
       data,
       layout: adminLayout,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 /*
  * get/
@@ -114,7 +116,9 @@ router.get("/add-post", authMiddleware, async (req, res) => {
       locals,
       layout: adminLayout,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 /*
@@ -139,6 +143,60 @@ router.post("/add-post", authMiddleware, async (req, res) => {
   console.log(error);
 });
 
+
+
+/*
+ * get/
+ * admin  edit post -
+ *
+ */
+router.get("/edit-post/:id", authMiddleware, async (req, res) => {
+  try {
+   
+    const locals = { 
+      title: "Edit Post",
+      description: "Free nodeJs user management System"
+    }
+    const data = await Post.findOne( { _id: req.params.id });
+    res.render('admin/edit-post', {
+      data, 
+      locals,
+      layout: adminLayout
+    })
+   
+
+  } catch (error) {
+  console.log(error);}
+});
+
+ 
+/*
+ * put/
+ * admin  edit post -
+ *
+ */
+router.put("/edit-post/:id", authMiddleware, async (req, res) => {
+  try {
+    await Post.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      body: req.body.body,
+      updatedAt: Date.now()
+    })
+
+    res.redirect(`/edit-post/${req.params.id}`)
+
+  } catch (error) {
+
+    console.log(error);
+  }
+});
+
+
+
+
+/*
+/----------------------------------------------------------------------/
+*/
 /*
  * post/
  * admin / register
